@@ -35,7 +35,18 @@ After the training, you can find an ```outputs``` folder in the current director
 egs: 
 outputs/2021-09-02/00-04-52/checkpoints/checkpoint_best.pt
 ```
+For sre08/10 data, You can train only 50 epochs.
 
 ### 4. extract wav2vec2 feature from different wav2vec2 encoder layers
 
-
+Because the encoder of wav2vec2 has many layers, but the features extracted from the last layer are not the best to train our speaker analysis system. \
+Therefore, we can train our system by extracting features from different layers to explore which layer has the best effect.\
+Our experiments show that if the wav2vec2 model have 12 encoder layers, the best results can be obtained by extracting features from layer 7 or 9.\
+You can use the following commands to extract features: \
+```
+# --wav-path: The wav.scp file which you want to extract the dataset
+# --layer 9: extractor feature from layer 9
+# --out-dir: Storage path of extracted features
+# --model: Trained model path, you can find in your outputs folder
+python extract_wav2vec2_fairseq2.py --wav-path ../data/train/wav.scp --out-dir ../data/train/wav2vec2-libri960-model-finetune-48epoch --model wav2vec2_model/libri960_basemodel_sre0810_finetune_48epoch.pt --layer 9
+```
