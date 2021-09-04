@@ -1,21 +1,24 @@
 # ISCAP_Age_Estimation
 
-This Repository contains the code for pretrain wav2vec2 model.
+This is a wrapper version of [wav2vec 2.0 framework](https://github.com/pytorch/fairseq/tree/master/examples/wav2vec), which attempts to build an accurate speech recognition models with small amount of transcribed data.
+But we use this model to extractor new feature for our training.
 
 ## Installation
 
 ## Usage
 
-### prepare data 
+### 1.prepare data 
 
+First of all, take our training data set as an unlabeled data set to train the wav2 vec2 model. \
+Of course, if you have other real unlabeled data sets to participate in the training, it is also encouraged.\
 create wav_path file, like ```../data/train/wav_path```
 
-### download pretrained wav2vec2 model
+### 2. download pretrained wav2vec2 model
 
 
 
-### use new data to finetune orignal wav2vec2 model
+### 3. use new data to finetune orignal wav2vec2 model
 
-### extract wav2vec2 feature from different wav2vec2 encoder layers
+### 4. extract wav2vec2 feature from different wav2vec2 encoder layers
 
 
