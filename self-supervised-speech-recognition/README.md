@@ -53,4 +53,4 @@ python extract_wav2vec2_fairseq2.py --wav-path ../data/train/wav.scp --out-dir .
 ```
 
 ## Reference:
-Paper: wav2vec 2.0: A Framework for Self-Supervised Learning of Speech Representations: https://arxiv.org/abs/2006.11477 \
+Paper: wav2vec 2.0: A Framework for Self-Supervised Learning of Speech Representations: https://arxiv.org/abs/2006.11477
