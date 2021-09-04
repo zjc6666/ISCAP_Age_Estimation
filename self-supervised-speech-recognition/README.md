@@ -16,9 +16,25 @@ create wav_path file, like ```../data/train/wav_path```
 
 ### 2. download pretrained wav2vec2 model
 
-If you only have a small amount of data to train the wav2vec2 model, you can download the trained wav2 vec2 model from the Internet, and then fine tune it with your data.
+Instead of training from scratch, we download and use english wav2vec model for weight initialization. This pratice can be apply to all languages.
+```
+wget https://dl.fbaipublicfiles.com/fairseq/wav2vec/wav2vec_small.pt
+```
 
 ### 3. use new data to finetune orignal wav2vec2 model
+
+```
+python3 pretrain.py --fairseq_path ./fairseq/ --audio_path ../data/train/wav_path --init_model wav2vec_small.pt
+```
+If you have a large amount of data to train wav2vec2 model, you can also consider not using the downloaded model for initialization.
+```
+python3 pretrain.py --fairseq_path ./fairseq/ --audio_path ../data/train/wav_path
+```
+After the training, you can find an ```outputs``` folder in the current directory. You can find the location of your final trained model according to the training time.
+```
+egs: 
+outputs/2021-09-02/00-04-52/checkpoints/checkpoint_best.pt
+```
 
 ### 4. extract wav2vec2 feature from different wav2vec2 encoder layers
 
