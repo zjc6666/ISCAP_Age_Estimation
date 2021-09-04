@@ -51,3 +51,6 @@ You can use the following commands to extract features:
 # --model: Trained model path, you can find in your outputs folder
 python extract_wav2vec2_fairseq2.py --wav-path ../data/train/wav.scp --out-dir ../data/train/wav2vec2-libri960-model-finetune-48epoch --model wav2vec2_model/libri960_basemodel_sre0810_finetune_48epoch.pt --layer 9
 ```
+
+## Reference:
+Paper: wav2vec 2.0: A Framework for Self-Supervised Learning of Speech Representations: https://arxiv.org/abs/2006.11477 \
