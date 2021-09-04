@@ -42,7 +42,7 @@ For sre08/10 data, You can train only 50 epochs.
 Because the encoder of wav2vec2 has many layers, but the features extracted from the last layer are not the best to train our speaker analysis system. \
 Therefore, we can train our system by extracting features from different layers to explore which layer has the best effect.\
 Our experiments show that if the wav2vec2 model have 12 encoder layers, the best results can be obtained by extracting features from layer 7 or 9.\
-You can use the following commands to extract features:\
+You can use the following commands to extract features:
 
 ```
 # --wav-path: The wav.scp file which you want to extract the dataset
