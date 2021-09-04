@@ -27,6 +27,8 @@ Open ISCAP_Age_Estimation/path.sh file, change $MAIN_ROOT$ to your espnet direct
 ```
 e.g. MAIN_ROOT=/home/theanhtran/espnet
 ```
+Move the files in the espnet folder to the directory where you installed espnet
+
 ## Prepare data
 Because wav2vec2 model training can only be sent to the absolute path of audio files, not in the form of pipes.\
 So the first step is to regenerate a new wav file using the original wav.scp and segments files.\
