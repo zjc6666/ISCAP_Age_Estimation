@@ -30,39 +30,11 @@ e.g. MAIN_ROOT=/home/theanhtran/espnet
 ## Prepare data
 Because wav2vec2 model training can only be sent to the absolute path of audio files, not in the form of pipes.\
 So the first step is to regenerate a new wav file using the original wav.scp and segments files.\
-You can find the following three scripts in prepare.sh by directly executing ```bash scripts/prepare_ Data.sh```
-### Denerate new wav file for train set
-```
-## parameter 1: wav.scp file, parameter 2: segments file, parameter 3: Storage address of the new audio file
-## Generate execute command
-python scripts/generate_new_wav.py data-org/train/wav.scp data-org/train/segments /home3/maison2/zjc/data/NIST_SRE_Corpus/train/ > data-org/train/generate_cmd.sh
-bash data-org/train/generate_cmd.sh
-mkdir data/train -p
-cp data-org/train/{text,utt2spk,utt2age} data/train
-cat data-org/train/wav.scp | awk '{print $1 " /home3/maison2/zjc/data/NIST_SRE_Corpus/train/"$1".wav"}' > data/train/wav.scp
-```
-### Denerate new wav file for valid set
-```
-## parameter 1: wav.scp file, parameter 2: segments file, parameter 3: Storage address of the new audio file
-## Generate execute command
-python scripts/generate_new_wav.py data-org/valid/wav.scp data-org/valid/segments /home3/maison2/zjc/data/NIST_SRE_Corpus/valid/ > data-org/valid/generate_cmd.sh
-bash data-org/valid/generate_cmd.sh
-mkdir data/valid -p
-cp data-org/valid/{text,utt2spk,utt2age} data/valid
-cat data-org/valid/wav.scp | awk '{print $1 " /home3/maison2/zjc/data/NIST_SRE_Corpus/valid/"$1".wav"}' > data/valid/wav.scp
-```
-### Denerate new wav file for test set
-```
-## parameter 1: wav.scp file, parameter 2: segments file, parameter 3: Storage address of the new audio file
-## Generate execute command
-python scripts/generate_new_wav.py data-org/test/wav.scp data-org/test/segments /home3/maison2/zjc/data/NIST_SRE_Corpus/test/ > data-org/test/generate_cmd.sh
-bash data-org/test/generate_cmd.sh
-mkdir data/test -p
-cp data-org/test/{text,utt2spk,utt2age} data/test
-cat data-org/test/wav.scp | awk '{print $1 " /home3/maison2/zjc/data/NIST_SRE_Corpus/test/"$1".wav"}' > data/test/wav.scp
-```
-### Do speed perturb for train
+You can use the script to prepare all the data, but it may take a long time to generate all new wav file.
 
+ ```
+ bash scripts/prepare_data.sh --steps 1,2
+ ```
 
 ## How to run Age Estimation systems
 Two different features are mainly used in the experiment, namely fbank and wav2vec2 feature.
@@ -90,5 +62,6 @@ bash run_transformer_age_estimation_wav2vec2.sh --steps 1,2,3,4,5,6 --nj 10
 ```
 
 ### Notations
-You can change the ```train_set``` variable in the above two scripts(run_transformer_age_estimation.sh, run_transformer_age_estimation_wav2vec2.sh) to select the data you want to use (train or train_vol_sp).
+1. You can change the ```train_set``` variable in the above two scripts(run_transformer_age_estimation.sh, run_transformer_age_estimation_wav2vec2.sh) to select the data you want to use (train or train_vol_sp).
+2. You may need to change the ```basename``` variable in the ```run_transformer_age_estimation_wav2vec2.sh``` script, which should be consistent with the name you use when extracting features.
 
