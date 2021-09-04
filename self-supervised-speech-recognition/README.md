@@ -16,7 +16,7 @@ create wav_path file, like ```../data/train/wav_path```
 
 ### 2. download pretrained wav2vec2 model
 
-
+If you only have a small amount of data to train the wav2vec2 model, you can download the trained wav2 vec2 model from the Internet, and then fine tune it with your data.
 
 ### 3. use new data to finetune orignal wav2vec2 model
 
