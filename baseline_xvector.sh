@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# Build a kaldi i-vector baseline for OLR Challenge 2020
-# Zhang Haobo July 2, 2020
-# Modify by Zhang Jicheng(extract x-vector) July 6, 2020
+# Build a kaldi x-vector baseline for age estimation
+# Modify by Zhang Jicheng(extract x-vector) July 6, 2021
 
 nj=10
 steps=100
@@ -33,7 +32,7 @@ if [ ! -z "$steps" ]; then
 fi
 
 # data location and project location
-source_data=data
+source_data=data-spk
 project_dir=exp-xvector
 train_set=train_vol_sp # train
 test_set=test
