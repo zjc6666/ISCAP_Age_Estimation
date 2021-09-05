@@ -1,1 +1,2 @@
 pretrained_model/wav2vec2_libri960_small.pt filter=lfs diff=lfs merge=lfs -text
+pretrained_model/libri960_basemodel_sre0810_finetune_48epoch.pt filter=lfs diff=lfs merge=lfs -text
