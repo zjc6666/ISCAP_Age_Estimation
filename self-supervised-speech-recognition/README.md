@@ -45,6 +45,8 @@ Therefore, we can train our system by extracting features from different layers 
 Our experiments show that if the wav2vec2 model have 12 encoder layers, the best results can be obtained by extracting features from layer 7 or 9.\
 You can use the following commands to extract features:
 
+ - In order to better reproduce our results, you can directly use our trained model to extract features directly.
+
 ```
 # --wav-path: The wav.scp file which you want to extract the dataset
 # --layer 9: extractor feature from layer 9
