@@ -34,7 +34,7 @@ if [ ! -z $step01 ]; then
    echo "## Generate new wav file for sre08/10 dataset"
    for x in $train_set $valid_set $recog_set; do
       python scripts/generate_new_wav.py data-org/$x/wav.scp data-org/$x/segments /home3/maison2/zjc/data/NIST_SRE_Corpus/$x/ > data-org/$x/generate_cmd.sh
-      # bash $data/$x/generate_cmd.sh
+      bash $data/$x/generate_cmd.sh
       mkdir $tgt/$x -p
       cp $data/$x/{text,utt2spk,utt2age} $tgt/$x
       path="/home3/maison2/zjc/data/NIST_SRE_Corpus/"$x
@@ -54,13 +54,14 @@ if [ ! -z $step02 ]; then
    # generate new wav file
    for x in 1.1 0.9; do
       python scripts/generate_new_wav2.py $data/train_$x/wav.scp /home3/maison2/zjc/data/NIST_SRE_Corpus/train_$x/ > $data/train_$x/generate_cmd.sh
-      # bash $data/train_$x/generate_cmd.sh
+      bash $data/train_$x/generate_cmd.sh
       mkdir $tgt/train_$x -p
       cp $data/train_$x/{text,utt2spk} $tgt/train_$x
       path="/home3/maison2/zjc/data/NIST_SRE_Corpus/train_"$x
       cat $data/train_$x/wav.scp | awk -v p="$path" '{print $1 " "p"/"$1".wav"}' > $tgt/train_$x/wav.scp
       cat $data/train/utt2age | awk -v sp="$x" '{print "sp"sp"-"$0}' > $tgt/train_$x/utt2age
       utils/fix_data_dir.sh $tgt/train_$x
+      utils/validate_data_dir.sh --no-feats ${tgt}/train_$x
    done
 
    # form train_vol_sp
