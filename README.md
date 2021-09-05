@@ -2,7 +2,9 @@
 
 ## Introduction
 This project is mainly for age estimation. The model architecture is transformer encoder structure.
-While proposing to use such a network structure, two different features are mainly used in the experiment, namely fbank and wav2vec2 feature.
+While proposing to use such a network structure, two different features are mainly used in the experiment, namely fbank and wav2vec2 feature.\
+In addition, there also have a xvector system.
+
 ## Installation
 ### Setting up kaldi environment
 ```
@@ -27,8 +29,6 @@ Open ISCAP_Age_Estimation/path.sh file, change $MAIN_ROOT$ to your espnet direct
 ```
 e.g. MAIN_ROOT=/home/theanhtran/espnet
 ```
-Move the files in the espnet folder to the directory where you installed espnet
-
 ## Prepare data
 Because wav2vec2 model training can only be sent to the absolute path of audio files, not in the form of pipes.\
 So the first step is to regenerate a new wav file using the original wav.scp and segments files.\
@@ -62,6 +62,24 @@ bash run_transformer_age_estimation.sh --steps 1,2,3,4,5,6 --nj 10
 ```
 bash run_transformer_age_estimation_wav2vec2.sh --steps 1,2,3,4,5,6 --nj 10
 ```
+
+## X-Vector System
+This is an X-Vector system based on Kaldi.
+Use age as speaker id to train the X-Vector system.
+```
+## step01: extractor feature
+## step02: Prepare feats for egs
+## step03: Remove utts Done
+## step04: Get egs
+## step05: Prepare network config
+## step06: Train X-Vector Network
+## step07: Extract xvectors of several datasets
+## step08: Train the classifier and get scores
+## step09: Calculate Cavg EER and Acc
+## step10: Get MAE and RMSE 
+bash baseline_xvector.sh --steps 1,2,3,4,5,6,7,8,9,10 --nj 10
+```
+
 
 ### Notations
 1. You can change the ```train_set``` variable in the above two scripts(run_transformer_age_estimation.sh, run_transformer_age_estimation_wav2vec2.sh) to select the data you want to use (train or train_vol_sp).
