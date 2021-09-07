@@ -52,13 +52,10 @@ if [ ! -z $step01 ]; then
         steps/make_mfcc_pitch.sh --pitch-config conf/pitch.conf --mfcc-config conf/sre-mfcc-20.conf \
                                 --nj $nj --cmd "$cmd" $data $log $feat || exit 1;
         steps/compute_cmvn_stats.sh $data $log $feat || exit 1
-        echo "## LOG(Extract Feature Done: $i @ `date`)"
-
         sid/compute_vad_decision.sh --nj $nj --cmd "$cmd" \
                                 --vad-config conf/vad-5.0.conf $data $log $feat || exit 1
-        echo "## Step03: Extract Feature for $i Done"
     done
-    echo "## Step03: Extract Feature Done"
+    echo "## Step01: Extract Feature Done"
 fi
 
 
