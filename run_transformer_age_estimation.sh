@@ -140,7 +140,6 @@ attSize=512
 lossType='MSE' # MSE
 if [ ! -z $step05 ]; then
     echo "## Stage 5: Network Training"
-
     train_set=train
     expname=${train_set}_6enc_age_estimation_withSpecAug_${lossType}_${backend}
     expdir=$exp/${expname}
@@ -235,8 +234,8 @@ if [ ! -z $step6 ]; then
             --model ${expdir}/results/${recog_model} 
         cat ${expdir}/${decode_dir}/age_pre.*.json > ${expdir}/${decode_dir}/prediction.txt
 
-        python3 estimate_rmse_mae_age.py ${expdir}/${decode_dir}/prediction.txt $data/${rtask}/utt2age $data/all/utt2spk $data/all/spk2gender  > ${expdir}/${decode_dir}/results.txt
-        python3 estimate_rmse_mae_age_entireRecording.py ${expdir}/${decode_dir}/prediction.txt $data/${rtask}/utt2age $data/all/utt2spk $data/all/spk2gender  > ${expdir}/${decode_dir}/results_recording.txt
+        python3 scripts/estimate_rmse_mae_age.py ${expdir}/${decode_dir}/prediction.txt $data/${rtask}/utt2age $data/all/utt2spk $data/all/spk2gender  > ${expdir}/${decode_dir}/results.txt
+        python3 scripts/estimate_rmse_mae_age_entireRecording.py ${expdir}/${decode_dir}/prediction.txt $data/${rtask}/utt2age $data/all/utt2spk $data/all/spk2gender  > ${expdir}/${decode_dir}/results_recording.txt
 
     ) 
     done

@@ -68,20 +68,14 @@ fi
 
 data=data
 exp=exp
-train_set="train" # train_vol_sp
+train_set="train_vol_sp"
 valid_set="valid"
 recog_set="test"
 basename=wav2vec2-libri960-model-finetune-48epoch # 48 means use sre08/10 data to train wav2vec2 model 48 epochs
-feats=ark_layer7
-
+feats=ark_layer9
 if [ ! -z $step01 ]; then
-   echo "## Step 01: Extracting filter-bank features and cmvn"
-   for i in $train_set $valid_set $recog_set;do 
-      utils/fix_data_dir.sh $data/$i
-      steps/make_fbank_pitch.sh --cmd "$cmd" --nj $nj --write_utt2num_frames true \
-          $data/$i $data/$i/feats/log $data/$i/feats/ark
-      utils/fix_data_dir.sh $data/$i
-   done
+   echo "## Step 01: Extracting wav2vec2 features and cmvn"
+   # You need to extract wav2vec2 features first, use "ISCAP_Age_Estimation/self-supervised-speech-recognition/"
    compute-cmvn-stats scp:$data/${train_set}/${basename}/${feats}.scp $data/${train_set}/${basename}/${feats}_cmvn.ark
    echo "## Step01 Extracting filter-bank features and cmvn Done"
 fi
@@ -135,82 +129,18 @@ if [ ! -z $step04 ]; then
     echo "## Stage 04: Make Json Labels Done"
 fi
 
-#BPE option
-linearSize=512
-nonlinearType='ReLU'
-attSize=512
-lossType='MSE' # MSE
-if [ ! -z $step05 ]; then
-    echo "## Stage 5: Network Training"
-    expname=${train_set}_${elayers}enc_age_estimation_${basename}_${feats}_${lossType}_${backend}
-    expdir=$exp/${expname}
-    epoch_stage=0
-    mkdir -p ${expdir}
-    ngpu=1
-    if  [ ${epoch_stage} -gt 0 ]; then
-        echo "stage 6: Resume network from epoch ${epoch_stage}"
-        resume=${exp}/${expname}/results/snapshot.ep.${epoch_stage}
-    fi  
-    ${cuda_cmd} --gpu $ngpu ${expdir}/train.log \
-         asr_train_for_regression_general.py \
-                --config ${train_config} \
-                --ngpu $ngpu \
-                --elayers ${elayers} \
-                --backend ${backend} \
-                --outdir ${expdir}/results \
-                --tensorboard-dir tensorboard/${expname} \
-                --debugmode ${debugmode} \
-                --dict ${dict} \
-                --debugdir ${expdir} \
-                --minibatches ${N} \
-                --verbose ${verbose} \
-                --resume ${resume} \
-                --utt2labelTrain $data/${train_set}/utt2age \
-                --utt2labelDev $data/${valid_set}/utt2age \
-                --attSize $attSize \
-                --linearSize $linearSize \
-                --nonlinearType $nonlinearType \
-                --lossType $lossType \
-                --train-json $data/${train_set}/${basename}/${train_set}_${bpemode}_${vocab_size}_${feats}.json \
-                --valid-json $data/${valid_set}/${basename}/${train_set}_${bpemode}_${vocab_size}_${feats}.json
-    echo "## Stage 5: Network Training Done"
-fi
 
-if [ ! -z $step06 ]; then
-    echo "## Stage 06: Decoding"
+if [ ! -z $step05 ]; then
+    echo "## Stage 05: Decoding"
     nj=50
-    for expname in ${train_set}_${elayers}enc_age_estimation_${basename}_${feats}_${lossType}_${backend}; do
-    expdir=$exp/${expname}
-    for max_epoch in 5 10 15 20 30 40 50;do
+    for expname in best-model; do
+    expdir=${expname}
     for recog_set in $valid_set $recog_set; do
-    for use_valbest_average in true false; do
-    if [[ $(get_yaml.py ${train_config} model-module) = *transformer* ]]; then
-        # Average ASR models
-        if ${use_valbest_average}; then
-            [ -f ${expdir}/results/model.val5.avg.best ] && rm ${expdir}/results/model.val5.avg.best
-            recog_model=model.val${n_average}_${log_step}.avg.best
-            opt="--log ${expdir}/results/log"
-        else
-            [ -f ${expdir}/results/model.last5.avg.best ] && rm ${expdir}/results/model.last5.avg.best
-            recog_model=model.last${n_average}.avg.best
-            opt="--log"
-        fi
-        python3 local/tools/average_max_epoch_checkpoints.py \
-            ${opt} \
-            --backend ${backend} \
-            --snapshots ${expdir}/results/snapshot.ep.* \
-            --out ${expdir}/results/${recog_model} \
-            --num ${n_average} \
-            --max-epoch $max_epoch
-    fi
+    recog_model=best-model/model.last5.avg.best
     pids=() # initialize pids
     for rtask in ${recog_set}; do
     (
-        if ${use_valbest_average}; then
-            decode_dir=decode_${rtask}_max_epoch_${max_epoch}
-        else
-            decode_dir=decode_${rtask}_max_epoch_last_${max_epoch}
-        fi
+        decode_dir=decode_${rtask}
 
         feat_recog_dir=$data/$rtask/${basename}
         echo $feat_recog_dir 
@@ -230,14 +160,12 @@ if [ ! -z $step06 ]; then
             --model ${expdir}/results/${recog_model}
         cat ${expdir}/${decode_dir}/age_pre.*.json > ${expdir}/${decode_dir}/prediction.txt
 
-        python3 scripts/estimate_rmse_mae_age.py ${expdir}/${decode_dir}/prediction.txt $data/${rtask}/utt2age $data/all/utt2spk $data/all/spk2gender  > ${expdir}/${decode_dir}/results.txt
-        python3 scripts/estimate_rmse_mae_age_entireRecording.py ${expdir}/${decode_dir}/prediction.txt $data/${rtask}/utt2age $data/all/utt2spk $data/all/spk2gender  > ${expdir}/${decode_dir}/results_recording.txt
+        python estimate_rmse_mae_age.py ${expdir}/${decode_dir}/prediction.txt $data/${rtask}/utt2age $data/all/utt2spk $data/all/spk2gender  > ${expdir}/${decode_dir}/results.txt
+        python3 estimate_rmse_mae_age_entireRecording.py ${expdir}/${decode_dir}/prediction.txt $data/${rtask}/utt2age $data/all/utt2spk $data/all/spk2gender  > ${expdir}/${decode_dir}/results_recording.txt
 
     )
     done
     done
     done
-    done
-    done
-    echo "##  Stage 06: Decoding Finished"
+    echo "##  Stage 05: Decoding Finished"
 fi  
