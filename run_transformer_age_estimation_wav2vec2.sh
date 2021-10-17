@@ -90,12 +90,12 @@ if [ ! -z $step02 ]; then
    echo "## Step02: Generate label file and dump features for track2:E2E"
    for x in ${train_set} ;do
       dump.sh --cmd "$cmd" --nj $nj  --do_delta false \
-         $data/$x/${basename}/${feats}.scp $data/${train_set}/${basename}/${feats}_cmvn.ark $data/$x/${basename}/${feats}_dump/log $data/$x/${basename}/${feats}_dump # for track2 e2e training
+         $data/$x/${basename}/${feats}.scp $data/${train_set}/${basename}/${feats}_cmvn.ark $data/$x/${basename}/${feats}_dump/log $data/$x/${basename}/${feats}_dump
   done
 
-   for x in $dev_set;do  #${valid_set} $recog_set;do  
+   for x in ${valid_set} $recog_set;do  
        dump.sh --cmd "$cmd" --nj $nj  --do_delta false \
-          $data/$x/${basename}/${feats}.scp $data/${train_set}/${basename}/${feats}_cmvn.ark $data/$x/${basename}/${feats}_dump_${train_set}/log $data/$x/${basename}/${feats}_dump_${train_set} # for track2 e2e training
+          $data/$x/${basename}/${feats}.scp $data/${train_set}/${basename}/${feats}_cmvn.ark $data/$x/${basename}/${feats}_dump_${train_set}/log $data/$x/${basename}/${feats}_dump_${train_set}
    done
    echo "## Step02 Generate label file and dump features for track2:E2E Done"   
 fi
@@ -127,9 +127,6 @@ if [ ! -z $step04 ]; then
     # make json labels
     data2json.sh --nj $nj --cmd "${cmd}" --feat $data/${train_set}/${basename}/${feats}_dump/feats.scp --trans_type char \
        $data/${train_set} ${dict} > ${data}/${train_set}/${basename}/${train_set}_${bpemode}_${vocab_size}_${feats}.json
-
-    data2json.sh --nj $nj --cmd "${cmd}" --feat $data/${train_set}/${basename}/${feats}_dump_utt/feats.scp --trans_type char \
-       $data/${train_set} ${dict} > ${data}/${train_set}/${basename}/${train_set}_${bpemode}_${vocab_size}_${feats}_dump_utt.json
 
     for x in $valid_set $recog_set;do 
        data2json.sh --nj $nj --cmd "${cmd}" --feat $data/${x}/${basename}/${feats}_dump_${train_set}/feats.scp --trans_type char \
@@ -233,8 +230,8 @@ if [ ! -z $step06 ]; then
             --model ${expdir}/results/${recog_model}
         cat ${expdir}/${decode_dir}/age_pre.*.json > ${expdir}/${decode_dir}/prediction.txt
 
-        python estimate_rmse_mae_age.py ${expdir}/${decode_dir}/prediction.txt $data/${rtask}/utt2age $data/all/utt2spk $data/all/spk2gender  > ${expdir}/${decode_dir}/results.txt
-        python3 estimate_rmse_mae_age_entireRecording.py ${expdir}/${decode_dir}/prediction.txt $data/${rtask}/utt2age $data/all/utt2spk $data/all/spk2gender  > ${expdir}/${decode_dir}/results_recording.txt
+        python3 scripts/estimate_rmse_mae_age.py ${expdir}/${decode_dir}/prediction.txt $data/${rtask}/utt2age $data/all/utt2spk $data/all/spk2gender  > ${expdir}/${decode_dir}/results.txt
+        python3 scripts/estimate_rmse_mae_age_entireRecording.py ${expdir}/${decode_dir}/prediction.txt $data/${rtask}/utt2age $data/all/utt2spk $data/all/spk2gender  > ${expdir}/${decode_dir}/results_recording.txt
 
     )
     done
