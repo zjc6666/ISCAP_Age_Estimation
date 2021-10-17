@@ -80,8 +80,25 @@ Use age as speaker id to train the X-Vector system.
 bash baseline_xvector.sh --steps 1,2,3,4,5,6,7,8,9,10 --nj 10
 ```
 
+## Directly Get Our Best Results
+### Before the experiment, you can use our trained model to reproduce our best results.
+Because our best result is obtained by using the wav2vec2 feature, So we must first obtain the wav2vec2 feature of the all data set before direct decoding.\
+The overall is divided into the following steps:
+```
+## 1. Get wav2vec2 feature.
+Using our trained wav 2 VEC 2 model, we extract the wav2vec features of three data sets(train_vol_sp, valid, test) from layer 9.
+You can refer to the steps in the "self-supervised-speech-recognition/README" file.
+## 2. Generate label file and dump features, Dictionary Preparation and Make Json Labels (generate json file).
+bash get_best_results.sh --nj 1-4
+## 3. Decoding 
+bash get_best_results.sh --nj 6
+## 4. Check results.
+You can view the results in directory "best-model".
+```
+
 
 ### Notations
 1. You can change the ```train_set``` variable in the above two scripts(run_transformer_age_estimation.sh, run_transformer_age_estimation_wav2vec2.sh) to select the data you want to use (train or train_vol_sp).
 2. You may need to change the ```basename``` variable in the ```run_transformer_age_estimation_wav2vec2.sh``` script, which should be consistent with the name you use when extracting features.
+
 
