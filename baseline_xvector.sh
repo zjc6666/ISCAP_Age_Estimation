@@ -244,13 +244,9 @@ fi
 if [ ! -z $step10 ]; then
     echo "## Statistic MAE ans RMSE"
     for ((i=0;i<$num;i++));do
-        python3 estimate_rmse_mae_age.py $nnet_dir/${test[i]}/score/${meth}_${enroll[i]}_${test[i]}_lda${clad}_submean_norm_predict.txt $data/${test[i]}/utt2age $data/all/utt2spk $data/all/spk2gender  > $nnet_dir/${test[i]}/score/results.txt
-        python3 estimate_rmse_mae_age_entireRecording.py $nnet_dir/${test[i]}/score/${meth}_${enroll[i]}_${test[i]}_lda${clad}_submean_norm_predict.txt $data/${rtask}/utt2age $data/all/utt2spk $data/all/spk2gender  > $nnet_dir/${test[i]}/score/results_recording.txt
+        python3 scripts/estimate_rmse_mae_age.py $nnet_dir/${test[i]}/score/${meth}_${enroll[i]}_${test[i]}_lda${clad}_submean_norm_predict.txt $data/${test[i]}/utt2age $data/all/utt2spk $data/all/spk2gender  > $nnet_dir/${test[i]}/score/results.txt
+        python3 scripts/estimate_rmse_mae_age_entireRecording.py $nnet_dir/${test[i]}/score/${meth}_${enroll[i]}_${test[i]}_lda${clad}_submean_norm_predict.txt $data/${rtask}/utt2age $data/all/utt2spk $data/all/spk2gender  > $nnet_dir/${test[i]}/score/results_recording.txt
     done
-    echo "MAE for ${test[i]} set"
-    tail $nnet_dir/${test[i]}/score/results.txt
-    echo "RMAE for ${test[i]} set"
-    tail $nnet_dir/${test[i]}/score/results_recording.txt
     echo "## Step10: Statistic MAE and RMSE Done"
 fi
 
