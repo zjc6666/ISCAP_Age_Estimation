@@ -48,9 +48,9 @@ if [ ! -z $step01 ]; then
 fi
 
 if [ ! -z $step02 ]; then
-   echo "## Do speed perturb for train set"
-   utils/perturb_data_dir_speed_tempo.sh 1.1 $tgt/$train_set $data/train_1.1
-   utils/perturb_data_dir_speed_tempo.sh 0.9 $tgt/$train_set $data/train_0.9
+   echo "## Do tempo perturb for train set"
+   utils/perturb_data_dir_speed2.sh 1.1 $tgt/$train_set $data/train_1.1
+   utils/perturb_data_dir_speed2.sh 0.9 $tgt/$train_set $data/train_0.9
    # generate new wav file
    for x in 1.1 0.9; do
       python scripts/generate_new_wav2.py $data/train_$x/wav.scp /home3/maison2/zjc/data/NIST_SRE_Corpus/train_$x/ > $data/train_$x/generate_cmd.sh
