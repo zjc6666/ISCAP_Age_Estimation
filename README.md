@@ -60,6 +60,8 @@ bash run_transformer_age_estimation.sh --steps 1,2,3,4,5,6 --nj 10
 
 ### Using wav2vec2 feature to run age estimation system
 ```
+Before you use wav2vec2 feature to train age estimation system, you need to extractor wav2vec2 feature.
+For details, please refer to self-supervised-speech-recognition/README.md.
 bash run_transformer_age_estimation_wav2vec2.sh --steps 1,2,3,4,5,6 --nj 10
 ```
 
