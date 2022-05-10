@@ -76,12 +76,12 @@ feats=ark_layer7
 
 if [ ! -z $step01 ]; then
    echo "## Step 01: Extracting filter-bank features and cmvn"
-   for i in $train_set $valid_set $recog_set;do 
-      utils/fix_data_dir.sh $data/$i
-      steps/make_fbank_pitch.sh --cmd "$cmd" --nj $nj --write_utt2num_frames true \
-          $data/$i $data/$i/feats/log $data/$i/feats/ark
-      utils/fix_data_dir.sh $data/$i
-   done
+   # for i in $train_set $valid_set $recog_set;do 
+   #    utils/fix_data_dir.sh $data/$i
+   #    steps/make_fbank_pitch.sh --cmd "$cmd" --nj $nj --write_utt2num_frames true \
+   #        $data/$i $data/$i/feats/log $data/$i/feats/ark
+   #    utils/fix_data_dir.sh $data/$i
+   # done
    compute-cmvn-stats scp:$data/${train_set}/${basename}/${feats}.scp $data/${train_set}/${basename}/${feats}_cmvn.ark
    echo "## Step01 Extracting filter-bank features and cmvn Done"
 fi
