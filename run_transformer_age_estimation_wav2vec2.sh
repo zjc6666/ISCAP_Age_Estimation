@@ -139,6 +139,7 @@ fi
 linearSize=512
 nonlinearType='ReLU'
 attSize=512
+elayers=6
 lossType='MSE' # MSE
 if [ ! -z $step05 ]; then
     echo "## Stage 5: Network Training"
